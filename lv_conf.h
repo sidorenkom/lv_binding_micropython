@@ -20,7 +20,7 @@
 
 /* Maximal horizontal and vertical resolution to support by the library.*/
 #define LV_HOR_RES_MAX          (480)
-#define LV_VER_RES_MAX          (320)
+#define LV_VER_RES_MAX          (800)
 
 /* Color depth:
  * - 1:  1 byte per pixel
@@ -98,9 +98,10 @@ typedef int16_t lv_coord_t;
 /* Automatically defrag. on free. Defrag. means joining the adjacent free cells. */
 #  define LV_MEM_AUTO_DEFRAG  1
 #else       /*LV_MEM_CUSTOM*/
-#  define LV_MEM_CUSTOM_INCLUDE "include/lv_mp_mem_custom_include.h"   /*Header for the dynamic memory function*/
-#  define LV_MEM_CUSTOM_ALLOC     m_malloc       /*Wrapper to malloc*/
-#  define LV_MEM_CUSTOM_FREE      m_free         /*Wrapper to free*/
+#  define LV_MEM_CUSTOM_INCLUDE "upy_gc.h"  /*Header for the dynamic memory function*/ 
+#  define LV_MEM_CUSTOM_ALLOC     upy_gc_alloc 
+#  define LV_MEM_CUSTOM_FREE      upy_gc_free 
+#  define LV_MEM_CUSTOM_REALLOC   upy_gc_realloc 
 #endif     /*LV_MEM_CUSTOM*/
 
 /* Use the standard memcpy and memset instead of LVGL's own functions.
@@ -111,10 +112,10 @@ typedef int16_t lv_coord_t;
  * Used if lvgl is binded to higher level language and the memory is managed by that language */
 #define LV_ENABLE_GC 1 /* Enable GC for Micropython */
 #if LV_ENABLE_GC != 0
-#  define LV_GC_INCLUDE "py/mpstate.h"
-#  define LV_MEM_CUSTOM_REALLOC   m_realloc      /*Wrapper to realloc*/
-#  define LV_MEM_CUSTOM_GET_SIZE  gc_nbytes      /*Wrapper to lv_mem_get_size*/
-#  define LV_GC_ROOT(x) MP_STATE_PORT(x)
+#  define LV_GC_INCLUDE "upy_gc.h" 
+#  define LV_MEM_CUSTOM_REALLOC   upy_gc_realloc /*Wrapper to realloc*/ 
+#  define LV_MEM_CUSTOM_GET_SIZE  upy_gc_nbytes  /*Wrapper to lv_mem_get_size*/ 
+#  define LV_GC_ROOT(x) MP_STATE_PORT(x) 
 #endif /* LV_ENABLE_GC */
 
 /*=======================
@@ -391,7 +392,7 @@ typedef void * lv_indev_drv_user_data_t;            /*Type of user data in the i
 #define LV_FONT_MONTSERRAT_16    1
 #define LV_FONT_MONTSERRAT_18    0
 #define LV_FONT_MONTSERRAT_20    0
-#define LV_FONT_MONTSERRAT_22    0
+#define LV_FONT_MONTSERRAT_22    1
 #define LV_FONT_MONTSERRAT_24    0
 #define LV_FONT_MONTSERRAT_26    0
 #define LV_FONT_MONTSERRAT_28    0
@@ -414,7 +415,7 @@ typedef void * lv_indev_drv_user_data_t;            /*Type of user data in the i
 
 /*Pixel perfect monospace font
  * http://pelulamu.net/unscii/ */
-#define LV_FONT_UNSCII_8     0
+#define LV_FONT_UNSCII_8     1
 #define LV_FONT_UNSCII_16     0
 
 /* Optionally declare your custom fonts here.
